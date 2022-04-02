@@ -2,7 +2,6 @@ package Resources;
 
 import Models.LoanDetail;
 import Models.Payment;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
