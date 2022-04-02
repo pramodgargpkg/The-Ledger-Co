@@ -29,7 +29,7 @@ public class FileProcessor implements IFileProcessor {
                 var response = requestGenerator.service();
                 if (requestGenerator.getClass().equals(Service.BalanceService.class) && response.success) {
                     var balanceResponse = (BalanceResponse) response;
-                    System.out.println(balanceResponse.bankName + " " + balanceResponse.borrowerName + " " + balanceResponse.amountPaid + " " + balanceResponse.remainingEmis);
+                    System.out.println(balanceResponse.bankName + " " + balanceResponse.borrowerName + " " + (int)balanceResponse.amountPaid + " " + balanceResponse.remainingEmis);
                 }
             } else {
                 System.out.println(ErrorMessages.InvalidCommand());
