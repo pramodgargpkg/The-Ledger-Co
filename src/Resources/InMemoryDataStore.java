@@ -12,22 +12,22 @@ public class InMemoryDataStore implements IDataStore {
 
     @Override
     public boolean saveLoanDetails(LoanDetail loanDetail) {
-        var loanRecordKey = GetLoanRecordKey(loanDetail.bankName, loanDetail.borrowerName);
+        var loanRecordKey = getLoanRecordKey(loanDetail.bankName, loanDetail.borrowerName);
         loanRecords.put(loanRecordKey, loanDetail);
         return true;
     }
 
     @Override
     public LoanDetail getLoanDetails(String bankName, String borrowerName) {
-        var loanRecordKey = GetLoanRecordKey(bankName, borrowerName);
-        var existingLoanDetails = GetLoanRecord(loanRecordKey);
+        var loanRecordKey = getLoanRecordKey(bankName, borrowerName);
+        var existingLoanDetails = getLoanRecord(loanRecordKey);
         return existingLoanDetails;
     }
 
     @Override
     public boolean savePayment(String bankName, String borrowerName, Payment payment) {
-        var loanRecordKey = GetLoanRecordKey(bankName, borrowerName);
-        var existingLoanDetails = GetLoanRecord(loanRecordKey);
+        var loanRecordKey = getLoanRecordKey(bankName, borrowerName);
+        var existingLoanDetails = getLoanRecord(loanRecordKey);
 
         if (existingLoanDetails == null)
             return false;
@@ -39,7 +39,7 @@ public class InMemoryDataStore implements IDataStore {
         return true;
     }
 
-    public LoanDetail GetLoanRecord(Pair<String, String> loanRecordKey) {
+    public LoanDetail getLoanRecord(Pair<String, String> loanRecordKey) {
         LoanDetail existingLoanDetails = null;
         if (loanRecords.containsKey(loanRecordKey)) {
             existingLoanDetails = loanRecords.get(loanRecordKey);
@@ -48,7 +48,7 @@ public class InMemoryDataStore implements IDataStore {
         return existingLoanDetails;
     }
 
-    private Pair<String, String> GetLoanRecordKey(String bankName, String borrowerName) {
+    private Pair<String, String> getLoanRecordKey(String bankName, String borrowerName) {
         var loanRecordKey = new Pair<String, String>(bankName, borrowerName);
         return loanRecordKey;
     }

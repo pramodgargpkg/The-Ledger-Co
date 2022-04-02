@@ -21,13 +21,13 @@ public class BalanceService implements IRequestService {
         if (existingLoanRecord == null)
             throw new Exception(ErrorMessages.LoanRecordNotFound());
 
-        var emiAmount = existingLoanRecord.EmiAmount();
+        var emiAmount = existingLoanRecord.emiAmount();
         var totalAmountByEmi = balanceRequest.emiNo * emiAmount;
-        var totalLumpSumPaid = existingLoanRecord.LumpSumPaidTillEmiNumber(balanceRequest.emiNo);
+        var totalLumpSumPaid = existingLoanRecord.lumpSumPaidTillEmiNumber(balanceRequest.emiNo);
 
         var totalAmountPaidTillEmi = totalAmountByEmi + totalLumpSumPaid;
 
-        var amountPending = existingLoanRecord.TotalAmountToBeRepaid() - totalAmountPaidTillEmi;
+        var amountPending = existingLoanRecord.totalAmountToBeRepaid() - totalAmountPaidTillEmi;
         var remainingEmis = Math.ceil(amountPending / emiAmount);
 
         BalanceResponse balanceResponse = new BalanceResponse(existingLoanRecord.bankName,

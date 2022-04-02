@@ -67,26 +67,26 @@ public class LoanDetail {
         this.payments = payments;
     }
 
-    public double TotalAmountToBeRepaid() {
+    public double totalAmountToBeRepaid() {
         if (this.loanTenure > 0)
             return this.principalAmount + ((this.principalAmount * this.loanTenure * this.rateOfInterest) / 100);
         else
             return 0;
     }
 
-    public double EmiAmount() {
-        var totalAmountToBeRepaid = TotalAmountToBeRepaid();
+    public double emiAmount() {
+        var totalAmountToBeRepaid = totalAmountToBeRepaid();
         if (totalAmountToBeRepaid > 0)
             return Math.ceil(totalAmountToBeRepaid / (this.loanTenure * 12));
         else
             return 0;
     }
 
-    public double LumpSumPaidTillEmiNumber(int emiNumber) {
+    public double lumpSumPaidTillEmiNumber(int emiNumber) {
         int lumpSumPaid = 0;
         if (this.payments != null && this.payments.size() > 0) {
             for (Payment payment : this.payments) {
-                if (payment.emiNo < emiNumber) {
+                if (payment.emiNo <= emiNumber) {
                     lumpSumPaid += payment.amount;
                 }
             }
