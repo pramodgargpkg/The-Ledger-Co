@@ -1,0 +1,42 @@
+package Service;
+
+import Requests.BalanceRequest;
+import Resources.ErrorMessages;
+import Resources.IDataStore;
+import Response.BalanceResponse;
+import Response.BaseResponse;
+
+public class BalanceService implements IRequestService {
+    private final IDataStore dataStore;
+    private final BalanceRequest balanceRequest;
+
+    public BalanceService(BalanceRequest balanceRequest, IDataStore dataStore) {
+        this.dataStore = dataStore;
+        this.balanceRequest = balanceRequest;
+    }
+
+    @Override
+    public BaseResponse service() throws Exception {
+        var existingLoanRecord = dataStore.getLoanDetails(balanceRequest.bankName, balanceRequest.borrowerName);
+        if (existingLoanRecord == null)
+            throw new Exception(ErrorMessages.LoanRecordNotFound());
+
+        var emiAmount = existingLoanRecord.EmiAmount();
+        var totalAmountByEmi = balanceRequest.emiNo * emiAmount;
+        var totalLumpSumPaid = existingLoanRecord.LumpSumPaidTillEmiNumber(balanceRequest.emiNo);
+
+        var totalAmountPaidTillEmi = totalAmountByEmi + totalLumpSumPaid;
+
+        var amountPending = existingLoanRecord.TotalAmountToBeRepaid() - totalAmountPaidTillEmi;
+        var remainingEmis = Math.ceil(amountPending / emiAmount);
+
+        BalanceResponse balanceResponse = new BalanceResponse(existingLoanRecord.bankName,
+                existingLoanRecord.borrowerName,
+                (long) totalAmountPaidTillEmi,
+                remainingEmis > 0 ? (int) remainingEmis : 0,
+                true,
+                ""
+        );
+        return balanceResponse;
+    }
+}
